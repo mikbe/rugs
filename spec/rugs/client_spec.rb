@@ -16,24 +16,6 @@ describe RUGS::Client do
 
       client.remote_list.should include(remote)
     end
-
-    it 'should set the default remotes automatically' do
-      client.remote_add(remote, url, "default")
-      client.remote_add('some_remote', 'git@server.org', "default")
-      client.create repo_name
-
-      remotes = `git --git-dir="#{repo_name}/.git" --work-tree="#{repo_name}" remote`
-      remotes.should include("jamba", "some_remote")
-    end
-        
-    it "should not set default remotes if there aren't any" do
-      client.remote_add(remote, url)
-      client.remote_add('some_remote', 'git@server.org')
-      client.create repo_name
-
-      remotes = `git --git-dir="#{repo_name}/.git" --work-tree="#{repo_name}" remote`
-      remotes.should be_empty
-    end
     
     it "should set an non-default to be a default" do
       client.remote_add(remote, url)
@@ -85,7 +67,7 @@ describe RUGS::Client do
       client.on(remote)
       client.current_remote.should include(remote)
     end
-
+ 
     it 'should create a local git repo' do
       client.create repo_name
       Dir.exists?(repo_name).should be_true
@@ -95,7 +77,25 @@ describe RUGS::Client do
       client.create repo_name
       Dir.exists?("#{repo_name}/git_hooks").should be_true
     end
-    
+
+    it 'should set the default remotes automatically' do
+      client.remote_add(remote, url, "default")
+      client.remote_add('some_remote', 'git@server.org', "default")
+      client.create repo_name
+
+      remotes = `git --git-dir="#{repo_name}/.git" --work-tree="#{repo_name}" remote`
+      remotes.should include("jamba", "some_remote")
+    end
+        
+    it "should not set default remotes if there aren't any" do
+      client.remote_add(remote, url)
+      client.remote_add('some_remote', 'git@server.org')
+      client.create repo_name
+
+      remotes = `git --git-dir="#{repo_name}/.git" --work-tree="#{repo_name}" remote`
+      remotes.should be_empty
+    end
+
     after(:each) {clean_temp}
 
   end

@@ -15,7 +15,7 @@ module RUGS
       exec 'remote', 'add', server, url
       FileUtils.cd pwd
     end
-    
+
     private
     
     def self.exec(cmd, *args)

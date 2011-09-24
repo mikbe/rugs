@@ -1,5 +1,5 @@
 module RUGS
-  
+
   class Client
   
     attr_reader :current_remote
@@ -23,7 +23,7 @@ module RUGS
     def remote_add(remote, url, default=false)
       remote_list.merge!(remote => {url: url, default: default == "default"})
       Config.save("remotes", remote_list)
-    end 
+    end
 
     def remote_remove(remote)
       remote_list.delete(remote)

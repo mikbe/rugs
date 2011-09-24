@@ -3,12 +3,8 @@ require 'fileutils'
 
 describe RUGS::Git do
 
-  let(:git_server) {"#{TEMP}/git_server"}
+  let(:git_server) {"#{TEMP_DIR}/git_server"}
   let(:git) {RUGS::Git}
-  
-  before(:all) do 
-    FileUtils.mkdir_p git_server
-  end
   
   it 'should initialize a local repository' do
     repo_name = temp_file
@@ -28,6 +24,6 @@ describe RUGS::Git do
 
   end
   
-  after(:all) {FileUtils.rm_rf TEMP}
-  
+  after(:all) {temp_cleanup}
+
 end
