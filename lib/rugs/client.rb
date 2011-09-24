@@ -14,15 +14,14 @@ module RUGS
     
     def create(repo_name, *remote)
       
-      just_name = repo_name.split("/").last
-      
-      make_local_repo(just_name)
-      add_defaults(just_name)
-      make_hooks(just_name)
+      make_local_repo(repo_name)
+      add_defaults(repo_name)
+      make_hooks(repo_name)
       
       unless remote.empty?
         puts
         puts "create remote: #{remote.last}"
+        just_name = repo_name.split("/").last
         make_remote_repo(just_name, remote.last)
       end
       
