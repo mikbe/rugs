@@ -11,22 +11,17 @@ describe RUGS::Client do
     
     let(:repo_name) {temp_file}
 
-    it "should remember a remote's address" do
+    it "should remember remote servers" do
       client.remote_add(remote, url)
 
       client.remote_list.should include(remote)
     end
     
-    it "should set an non-default to be a default" do
+    it "should forget remote servers" do
       client.remote_add(remote, url)
-      client.default(remote)
-      client.default_remotes.should include(remote)
-    end
-    
-    it "should un-default a remote" do
-      client.remote_add(remote, url, "default")
-      client.undefault(remote)
-      client.default_remotes.should_not include(remote)
+
+      client.remote_remove(remote)
+      client.remote_list.should be_empty
     end
     
     it "should remember default remotes" do
@@ -45,19 +40,24 @@ describe RUGS::Client do
         "some_remote"=>{:url=>"git@server.org", :default=>true}
       }
     end
-    
-    it "should remove remote servers" do
-      client.remote_add(remote, url)
 
-      client.remote_remove(remote)
-      client.remote_list.should be_empty
+    it "should set an non-default to be a default" do
+      client.remote_add(remote, url)
+      client.default(remote)
+      client.default_remotes.should include(remote)
     end
     
+    it "should un-default a remote" do
+      client.remote_add(remote, url, "default")
+      client.undefault(remote)
+      client.default_remotes.should_not include(remote)
+    end
+
     after(:each) {clean_config}
     
   end
   
-  context 'when creating repos' do
+  context 'when creating local repos' do
 
     let(:repo_name) {temp_file}
     

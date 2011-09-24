@@ -24,6 +24,6 @@ describe RUGS::Git do
 
   end
   
-  after(:all) {temp_cleanup}
+  after(:all) {clean_temp}
 
 end
