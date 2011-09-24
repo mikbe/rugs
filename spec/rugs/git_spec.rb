@@ -3,23 +3,22 @@ require 'fileutils'
 
 describe RUGS::Git do
 
-  let(:git_server) {"#{TEMP_DIR}/git_server"}
   let(:git) {RUGS::Git}
+  let(:file_name) {random_name}
+  let(:repo_path) {"#{Dir.tmpdir}/#{file_name}"}
   
   it 'should initialize a local repository' do
-    repo_name = temp_file
-    git.init(repo_name).should include("Initialized empty Git repository")
+    git.init(repo_path).should include("Initialized empty Git repository")
   end
 
   it 'should add remote settings to the repo' do
-    repo_name = temp_file
     server    = random_name
     url       = "git@#{random_name}.org"
      
-    git.init(repo_name)
-    git.remote_add(repo_name, server, url)
+    git.init(repo_path)
+    git.remote_add(repo_path, server, url)
     
-    remotes = `git --git-dir="#{repo_name}/.git" --work-tree="#{repo_name}" remote`
+    remotes = `git --git-dir="#{repo_path}/.git" --work-tree="#{repo_path}" remote`
     remotes.should include(server)
 
   end

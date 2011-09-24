@@ -10,10 +10,6 @@ def random_name
   12.times.map{('a'..'z').to_a.sample}.join
 end
 
-def temp_file
-  "#{TEMP_DIR}/#{random_name}"
-end
-
 def clean_config
   FileUtils.rm Dir["#{RUGS::Config::PATH}/*"]
 end

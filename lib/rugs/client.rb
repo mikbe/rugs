@@ -2,8 +2,6 @@ module RUGS
 
   class Client
   
-    attr_reader :current_remote
-  
     def remote_list
       @remote_list ||= Config.load("remotes")
     end
@@ -14,24 +12,33 @@ module RUGS
       end
     end
     
-    def create(repo_name)
-      make_repo(repo_name)
-      add_defaults(repo_name)
-      make_hooks(repo_name)
+    def create(repo_name, *remote)
+      
+      just_name = repo_name.split("/").last
+      
+      make_local_repo(just_name)
+      add_defaults(just_name)
+      make_hooks(just_name)
+      
+      unless remote.empty?
+        puts
+        puts "create remote: #{remote.last}"
+        make_remote_repo(just_name, remote.last)
+      end
+      
     end
     
-    def remote_add(remote, url, default=false)
-      remote_list.merge!(remote => {url: url, default: default == "default"})
+    def remote_add(remote, url_path, default=false)
+      
+      url, path = url_path.split(":")
+      
+      remote_list.merge!(remote => {url: url, path: path, default: default == "default"})
       Config.save("remotes", remote_list)
     end
 
     def remote_remove(remote)
       remote_list.delete(remote)
       Config.save("remotes", remote_list)
-    end
-
-    def on(remote)
-      @current_remote = {remote => remote_list[remote]}
     end
 
     def default(remote, is_default=true)
@@ -44,9 +51,23 @@ module RUGS
 
     private
     
-    def make_repo(repo_name)
+    def make_local_repo(repo_name)
       return if Dir.exists?("#{repo_name}/.git")
       Git.init(repo_name) 
+    end
+
+    def make_remote_repo(repo_name, remote)
+      url     = remote_list[remote][:url]
+      path    = remote_list[remote][:path]
+      default = remote_list[remote][:default]
+      
+      puts "url: #{url}; path: #{path}; default: #{default};"
+      #`ssh #{url} 'git init #{"#{path}/" if path}#{repo_name}.git'`
+      puts "repo_name: #{repo_name}"
+      puts "path: #{path}"
+      puts "Look good?"
+      puts `ssh #{url} 'git init #{"#{path}/" if path}#{repo_name}.git --bare'`
+
     end
 
     def add_defaults(repo_name)
