@@ -4,7 +4,7 @@ A helper script that makes setting up git repositories a snap.
 
 RUGS has three main functions:  
 
-* Creates a local git repository with templates you design.
+* Creates a local git repository using default templates or ones you create.
 * Sets up a remote repository to mirror your local one.
 * Adds a framework of git hooks allowing you to store and run your own hooks in directly from the repo.
 

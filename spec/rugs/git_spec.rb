@@ -3,17 +3,16 @@ require 'fileutils'
 
 describe RUGS::Git do
 
+  let(:git_server) {"#{TEMP}/git_server"}
   let(:git) {RUGS::Git}
-    
-  it 'should run commands git knows' do
-    repo_name = temp_name
-    git.init(repo_name).should include("Initialized empty Git repository")
+  
+  before(:all) do 
+    FileUtils.mkdir_p git_server
   end
   
-  it 'should not run commands git does not know' do
-    repo_name = temp_name
-    expect{git.unicorn_and_rainbows(repo_name)}.should 
-      raise_error(Object::Exception)
+  it 'should initialize a local repository' do
+    repo_name = temp_file
+    git.init(repo_name).should include("Initialized empty Git repository")
   end
   
   after(:all) {FileUtils.rm_rf TEMP}
