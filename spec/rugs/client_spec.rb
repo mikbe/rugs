@@ -15,26 +15,12 @@ describe RUGS::Client do
       client.server_list.should include(server)
     end
     
-    it "should create a config file for server addresses" do
-      client.remote_add(server, url)
-
-      File.exist?("#{CONFIG}/servers.yaml").should be_true
-    end
-
-    it "should save the server's address in the config file" do
-      client.remote_add(server, url)
-
-      servers = Psych.load(File.open("#{CONFIG}/servers.yaml"))
-      servers.should include(server)
-    end
-    
     it "should remember default servers" do
       client.remote_add(server, url, "default")
 
       client.default_servers.should 
         include({"jamba"=>{:url=>"git@juice.com", :default=>true}})
     end
-    
         
     it "should remember multiple default servers" do
       client.remote_add(server, url, "default")
@@ -45,7 +31,6 @@ describe RUGS::Client do
         "some_server"=>{:url=>"git@server.org", :default=>true}
       }
     end
-
     
     after(:each) {clean_config}
     

@@ -6,14 +6,17 @@ require 'rugs'
 require 'fileutils'
 
 TEMP    = File.expand_path(File.join(File.dirname(__FILE__), "/../temp_rspec"))
-CONFIG  = File.expand_path(File.join(File.dirname(__FILE__), "/../config"))
 
-def temp_file(length=12)
-  "#{TEMP}/" + length.times.map{('a'..'z').to_a.sample}.join
+def random_name
+  12.times.map{('a'..'z').to_a.sample}.join
+end
+
+def temp_file
+  "#{TEMP}/#{random_name}"
 end
 
 def clean_config
-  FileUtils.rm Dir["#{CONFIG}/*"]
+  FileUtils.rm Dir["#{RUGS::Config::PATH}/*"]
 end
 
 def clean_temp
