@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+$LOAD_PATH.unshift File.expand_path(File.dirname(__FILE__) + "/../lib")
+require 'commandable'
+Commandable.verbose_parameters = false
+Commandable.color_output = true
+Commandable.app_exe = "rugs"
+Commandable.app_info =
+"""
+  RUGS - RUby Git Setup
+  A helper script that makes setting up remote git repositories a snap.
+  Copyright (c) 2012 Mike Bethany
+  http://mikbe.tk
+"""
+
+require 'rugs'
+Commandable.execute(ARGV)
