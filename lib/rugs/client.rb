@@ -6,27 +6,31 @@ module RUGS
     extend Commandable
     
     command 'stored remotes'
-    def remote_list
-      @remote_list ||= Config.load("remotes")
+    def remotes
+      remote_list.collect do |remote, keys|
+        "#{remote}: #{keys[:path]}; default? #{keys[:default]}"
+      end
     end
- 
+    
     command 'remotes that will automatically be added to repos'
-    def default_remotes
-      @default_remotes ||= remote_list.select do |remote, keys|
-        keys[:default]
+    def defaults
+      default_remotes.collect do |remote, keys|
+        "#{remote}: #{keys[:path]}; default? #{keys[:default]}"
       end
     end
     
     command 'make and set up a remote'
     def create(repo_name, *remote)
+      just_name = repo_name.split("/").last
+
       make_local_repo(repo_name)
       add_defaults(repo_name)
       make_hooks(repo_name)
       
       unless remote.empty?
-        just_name = repo_name.split("/").last
         make_remote_repo(just_name, remote.last)
       end
+      "Created #{just_name} locally#{" and on remote #{remote.last}" unless remote.empty?}"
     end
     
     command 'add a remote server to be used when setting up repos'
@@ -37,22 +41,40 @@ module RUGS
       
       remote_list.merge!(remote => {url: url, path: path, default: default})
       Config.save("remotes", remote_list)
+      
+      "Added remote #{remote}.\n\nRemotes:\n#{remotes}"
     end
 
-    command 'remove a remote server'
+    command 'remove a remote server from the list of remotes'
     def remote_remove(remote)
       remote_list.delete(remote)
       Config.save("remotes", remote_list)
+      "Removed remote #{remote}.\n\nRemotes:\n#{remotes}"
     end
 
     command 'make an existing remote a default remote'
-    def default(remote, is_default=true)
+    def set_default(remote, is_default=true)
       remote_list[remote][:default] = is_default
+      if is_default
+        "Set #{remote} as a default"
+      else
+        "Removed #{remote} from defaults"
+      end
     end
 
     command 'remove a remote from the default list'
-    def undefault(remote)
-      default remote, false
+    def unset_default(remote)
+      set_default remote, false
+    end
+
+    def default_remotes
+      @default_remotes ||= remote_list.select do |remote, keys|
+        keys[:default]
+      end
+    end
+
+    def remote_list
+      @remote_list ||= Config.load("remotes")
     end
 
     private

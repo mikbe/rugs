@@ -61,13 +61,13 @@ describe RUGS::Client do
 
       it "should set an exisiting remote as a default" do
         client.remote_add(remote, url)
-        client.default(remote)
+        client.set_default(remote)
         client.default_remotes.should include(remote)
       end
     
       it "should un-default a remote" do
         client.remote_add(remote, url, "default")
-        client.undefault(remote)
+        client.unset_default(remote)
         client.default_remotes.should_not include(remote)
       end
     
