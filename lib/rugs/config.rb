@@ -28,7 +28,7 @@ module RUGS
 
     public 
     
-    PATH = build_path(File.dirname(__FILE__), "../../config")
+    PATH = build_path("~/.rugs", "config")
     #File.expand_path(File.join(File.dirname(__FILE__), "/../config"))
 
     FileUtils.mkdir_p PATH

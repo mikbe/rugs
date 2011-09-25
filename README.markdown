@@ -26,11 +26,16 @@ Basic functionality done:
 
 ## To do
 
-Lots...
+Lots:
 
+* Clean up method output for command line.
 * Add setup templates
 * Add hook framework to store and run hooks from the repo itself.
-* Clean up method output for command line.
+
+Non-functionality stuff:
+
+* Refactor (of course)
+* Clean up test, they're really ugly.
 
 ## Instructions
 
