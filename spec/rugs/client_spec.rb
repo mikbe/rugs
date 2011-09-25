@@ -8,6 +8,7 @@ describe RUGS::Client do
   let(:remote){'test'}
   let(:url){'root@git-test'}
   let(:path){'/srv/repos/git'}
+  
   let(:repo_name){random_name}
   let(:local_repo){"#{TEMP_DIR}/#{repo_name}"}
   
@@ -102,8 +103,8 @@ describe RUGS::Client do
       client.remote_add(remote, url)
       client.remote_add('some_remote', 'git@server.org') 
       client.create local_repo
-      puts "local_repo: #{local_repo}"
-      remotes = `git --git-dir="#{repo_name}/.git" --work-tree="#{repo_name}" remote`
+
+      remotes = `git --git-dir="#{local_repo}/.git" --work-tree="#{local_repo}" remote`
       remotes.should be_empty
     end
 
@@ -112,7 +113,7 @@ describe RUGS::Client do
   # It's probably best to set up a git server on a virtual machine for these tests.
   # These tests are set up with the following system in place...
   #
-  # You can download a free, ready to run vm from here:
+  # You can download a free, ready to run Linux VM from here:
   #  http://www.turnkeylinux.org/revision-control
   #
   # And you can use the free VirtualBox software to run it:
@@ -123,15 +124,14 @@ describe RUGS::Client do
   #
   context 'when creating remote repos' do
     
-    it 'should create a remote repo' do
+    it 'should create a repo on the remote server' do
       client.remote_add(remote, "#{url}:#{path}")
-      
       client.create local_repo, remote
       
-      test = `ssh #{url} ls #{path}/#{repo_name}_x.git`
-      puts test.inspect
-      test.should_not include("No such file")
-      
+      out, status = Open3.capture2e("ssh", 
+        "#{url}", "ls #{path}/#{repo_name}.git"
+      )
+      out.should_not include("No such file")
     end
 
   end

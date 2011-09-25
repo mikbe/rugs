@@ -19,8 +19,6 @@ module RUGS
       make_hooks(repo_name)
       
       unless remote.empty?
-        puts
-        puts "create remote: #{remote.last}"
         just_name = repo_name.split("/").last
         make_remote_repo(just_name, remote.last)
       end
@@ -60,13 +58,7 @@ module RUGS
       path    = remote_list[remote][:path]
       default = remote_list[remote][:default]
       
-      puts "url: #{url}; path: #{path}; default: #{default};"
-      #`ssh #{url} 'git init #{"#{path}/" if path}#{repo_name}.git'`
-      puts "repo_name: #{repo_name}"
-      puts "path: #{path}"
-      puts "Look good?"
-      puts `ssh #{url} 'git init #{"#{path}/" if path}#{repo_name}.git --bare'`
-
+      `ssh #{url} 'git init #{"#{path}/" if path}#{repo_name}.git --bare'`
     end
 
     def add_defaults(repo_name)
