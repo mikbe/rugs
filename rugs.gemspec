@@ -11,20 +11,20 @@ Gem::Specification.new do |s|
   s.summary     = %q{A helper script that makes setting up remote git repositories a snap.}
   s.description = 
 """
-= RUGS - RUby Git Setup
+==RUGS - RUby Git Setup==
 
 A helper script that makes setting up remote git repositories a snap.  
 
-== WARNING: This is still alpha so use it at your own risk!
+===WARNING: This is still alpha so use it at your own risk!===
 Note: I don't use alpha/beta in the version numbers until I have a first real release because of how Ruby Gems handles them.
 
-== What is it?
+===What is it?===
 
 RUGS has three main functions:  
 
-* Creates a local git repository and directory structure using default templates or ones you create.
-* Sets up a remote repository to mirror your local one.
-* Adds a framework of git hooks allowing you to store and run your own hooks in directly from the repo.
+# Creates a local git repository and directory structure using default templates or ones you create.
+# Sets up a remote repository to mirror your local one.
+# Adds a framework of git hooks allowing you to store and run your own hooks in directly from the repo.
 
 RUGS makes creating remote repos as simple as `rugs create repo_name on server_name`.
 
