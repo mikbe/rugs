@@ -8,15 +8,21 @@ module RUGS
     command 'stored remotes'
     def remotes
       remote_list.collect do |remote, keys|
-        "#{remote}: #{keys[:path]}; default? #{keys[:default]}"
-      end
+        url     = keys[:url]
+        path    = keys[:path]
+        default =  keys[:default]
+        "#{remote}: #{url}#{":#{path}" if path}; default? #{default}"
+      end.insert(0, "All remotes:")
     end
     
     command 'remotes that will automatically be added to repos'
     def defaults
       default_remotes.collect do |remote, keys|
-        "#{remote}: #{keys[:path]}; default? #{keys[:default]}"
-      end
+        url     = keys[:url]
+        path    = keys[:path]
+        default =  keys[:default]
+        "#{remote}: #{url}#{":#{path}" if path}; default? #{default}"
+      end.insert(0, "Default remotes:")
     end
     
     command 'make and set up a remote'
@@ -27,8 +33,11 @@ module RUGS
       add_defaults(repo_name)
       make_hooks(repo_name)
       
+      FileUtils.cd repo_name
+
       unless remote.empty?
         make_remote_repo(just_name, remote.last)
+        
       end
       "Created #{just_name} locally#{" and on remote #{remote.last}" unless remote.empty?}"
     end
@@ -42,14 +51,17 @@ module RUGS
       remote_list.merge!(remote => {url: url, path: path, default: default})
       Config.save("remotes", remote_list)
       
-      "Added remote #{remote}.\n\nRemotes:\n#{remotes}"
+      puts "Added remote #{remote}."
+      remotes
     end
 
     command 'remove a remote server from the list of remotes'
     def remote_remove(remote)
       remote_list.delete(remote)
       Config.save("remotes", remote_list)
-      "Removed remote #{remote}.\n\nRemotes:\n#{remotes}"
+      
+      puts "Removed remote #{remote}."
+      remotes
     end
 
     command 'make an existing remote a default remote'
@@ -60,6 +72,7 @@ module RUGS
       else
         "Removed #{remote} from defaults"
       end
+      remotes
     end
 
     command 'remove a remote from the default list'
