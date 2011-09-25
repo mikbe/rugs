@@ -1,9 +1,9 @@
 require 'psych'
+require 'fileutils'
 
 module RUGS
   
   class Config
-    
     
     def self.load(name)
       return {} unless File.exist?(config_file(name))
@@ -31,6 +31,8 @@ module RUGS
     PATH = build_path(File.dirname(__FILE__), "../../config")
     #File.expand_path(File.join(File.dirname(__FILE__), "/../config"))
 
+    FileUtils.mkdir_p PATH
+    
   end 
 
 end

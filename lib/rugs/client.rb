@@ -1,4 +1,4 @@
-requie 'commandable'
+require 'commandable'
 
 module RUGS
 
