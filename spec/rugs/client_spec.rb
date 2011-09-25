@@ -2,23 +2,23 @@ require 'spec_helper'
 require 'psych'
 
 describe RUGS::Client do
-  
+
   let(:client) {RUGS::Client.new}
 
   let(:remote){'test'}
   let(:url){'root@git-test'}
   let(:path){'/srv/repos/git'}
-  
+
   let(:repo_name){random_name}
   let(:local_repo){"#{TEMP_DIR}/#{repo_name}"}
-  
+
   let(:test_hash){
     {"test"=>{:url=>url, path: nil, :default=>true}}
   }
   let(:another_hash){
     {"another"=>{:url=>"git@another_server.org", path: nil, :default=>true}}
   }
-  
+
   context 'when managing remote server settings' do
 
     context "and adding or removing servers" do
@@ -88,7 +88,7 @@ describe RUGS::Client do
     end
     
   end
-  
+
   context 'when creating local repos' do
 
     it 'should create a local git repo' do
@@ -112,6 +112,22 @@ describe RUGS::Client do
 
       remotes = `git --git-dir="#{local_repo}/.git" --work-tree="#{local_repo}" remote`
       remotes.should be_empty
+    end
+
+    it "should build the remote path" do
+      client.remote_add(remote, url, "default")
+      client.create local_repo
+
+      remotes = `git --git-dir="#{local_repo}/.git" --work-tree="#{local_repo}" remote -v`
+      remotes.should include("#{url}:#{repo_name}.git")
+    end
+
+    it "should build the remote path with a path" do
+      client.remote_add(remote, "#{url}:#{path}", "default")
+      client.create local_repo
+
+      remotes = `git --git-dir="#{local_repo}/.git" --work-tree="#{local_repo}" remote -v`
+      remotes.should include("#{url}:#{path}/#{repo_name}.git")
     end
 
   end
@@ -151,7 +167,7 @@ describe RUGS::Client do
     # end
 
   end
-  
+
   after(:each) do
     clean_config
     clean_temp

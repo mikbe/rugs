@@ -30,7 +30,7 @@ Lots...
 
 * Add setup templates
 * Add hook framework to store and run hooks from the repo itself.
-
+* Clean up method output for command line.
 
 ## Instructions
 

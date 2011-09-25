@@ -19,7 +19,6 @@ module RUGS
     
     command 'make and set up a remote'
     def create(repo_name, *remote)
-      
       make_local_repo(repo_name)
       add_defaults(repo_name)
       make_hooks(repo_name)
@@ -28,7 +27,6 @@ module RUGS
         just_name = repo_name.split("/").last
         make_remote_repo(just_name, remote.last)
       end
-      
     end
     
     command 'add a remote server to be used when setting up repos'
@@ -74,7 +72,15 @@ module RUGS
 
     def add_defaults(repo_name)
       default_remotes.each do |remote, keys|
-        Git.remote_add(repo_name, remote, keys[:url])
+        url       = keys[:url]
+        path      = keys[:path]
+        just_name = repo_name.split("/").last
+        
+        Git.remote_add(
+          repo_name, 
+          remote, 
+          "#{url}:#{"#{path}/" if path}#{just_name}.git"
+        )
       end
     end
 
