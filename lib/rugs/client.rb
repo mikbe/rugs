@@ -26,10 +26,11 @@ module RUGS
     end
     
     def remote_add(remote, url_path, default=false)
-      
       url, path = url_path.split(":")
       
-      remote_list.merge!(remote => {url: url, path: path, default: default == "default"})
+      default = (remote == 'origin' || default == 'default')
+      
+      remote_list.merge!(remote => {url: url, path: path, default: default})
       Config.save("remotes", remote_list)
     end
 

@@ -1,6 +1,6 @@
 # RUGS - RUby Git Setup
 
-A helper script that makes setting up git repositories a snap.  
+A helper script that makes setting up remote git repositories a snap.  
 
 RUGS has three main functions:  
 

@@ -42,10 +42,16 @@ describe RUGS::Client do
       
       it "should remember default remotes" do
         client.remote_add(remote, url, "default")
-
         client.default_remotes.should include(test_hash)
       end
-        
+
+      it "should set origin remots as defaults" do
+        client.remote_add('origin', url)
+        client.default_remotes.should include(
+          {"origin"=>{:url=>"root@git-test", :path=>nil, :default=>true}}
+        )
+      end
+
       it "should remember multiple default remote" do
         client.remote_add(remote, url, "default")
         client.remote_add('another', 'git@another_server.org', "default")
@@ -131,6 +137,7 @@ describe RUGS::Client do
       out, status = Open3.capture2e("ssh", 
         "#{url}", "ls #{path}/#{repo_name}.git"
       )
+      `ssh #{url} 'rm -rf #{path}/*.git'`
       out.should_not include("No such file")
     end
 
